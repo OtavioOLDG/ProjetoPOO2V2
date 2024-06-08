@@ -38,4 +38,7 @@ public class CategoryResource {
 		Set<Product> obj = service.findByProductsById(id);
 		return ResponseEntity.ok().body(obj);
 	}
+	
+	
+	
 }
