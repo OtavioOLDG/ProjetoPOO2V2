@@ -1,6 +1,7 @@
 package com.educandoweb.course.resources;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.educandoweb.course.entities.Category;
+import com.educandoweb.course.entities.Product;
 import com.educandoweb.course.services.CategoryServices;
 
 @RestController
@@ -28,6 +30,12 @@ public class CategoryResource {
 	@GetMapping(value = "/{id}") // passa na url o valor do id do usuário e adiciona um parâmetro
 	public ResponseEntity<Category> findById(@PathVariable Long id) { // para o spring aceitar a variável q será colocada na url
 		Category obj = service.findById(id);
+		return ResponseEntity.ok().body(obj);
+	}
+	
+	@GetMapping(value = "products/{id}") // passa na url o valor do id do usuário e adiciona um parâmetro
+	public ResponseEntity<Set<Product>> findProductsById(@PathVariable Long id) { // para o spring aceitar a variável q será colocada na url
+		Set<Product> obj = service.findByProductsById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 }

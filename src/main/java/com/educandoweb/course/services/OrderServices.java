@@ -23,4 +23,8 @@ public class OrderServices {
 		Optional<Order> obj = repository.findById(id); //meio q faz uma objetificada
 		return obj.get();
 	}
+	
+	public void save(Order order) {
+		repository.save(order);
+	}
 }

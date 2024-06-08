@@ -1,8 +1,10 @@
 package com.educandoweb.course.resources;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,18 +17,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.educandoweb.course.entities.Bag;
 import com.educandoweb.course.entities.Order;
+import com.educandoweb.course.entities.OrderItem;
 import com.educandoweb.course.entities.Product;
 import com.educandoweb.course.entities.User;
+import com.educandoweb.course.entities.enums.OrderStatus;
 import com.educandoweb.course.repositories.UserRepository;
 import com.educandoweb.course.resources.dto.BuyingBag;
 import com.educandoweb.course.resources.dto.DeleteFromBag;
 import com.educandoweb.course.services.BagService;
+import com.educandoweb.course.services.OrderItemService;
+import com.educandoweb.course.services.OrderServices;
 import com.educandoweb.course.services.ProductServices;
 import com.educandoweb.course.services.UserServices;
 import com.educandoweb.course.services.exceptions.NotAllowedEception;
 
+import jakarta.transaction.Transactional;
+
 @RestController
 @RequestMapping(value ="/bag")
+@Import(OrderItemService.class)
 public class BagResource {
 	
 	@Autowired
@@ -40,6 +49,12 @@ public class BagResource {
 	
 	@Autowired
 	ProductServices productServices;
+	
+	@Autowired
+	OrderServices orderServices;
+	
+	@Autowired
+	OrderItemService orderItemServices;
 	
 	@GetMapping
 	public ResponseEntity<List<Order>> getOrders(JwtAuthenticationToken jwt) {
@@ -63,7 +78,7 @@ public class BagResource {
 	}
 	
 	@PostMapping(value = "/to_bag/{product_id}")
-	public ResponseEntity<Void> test(@RequestBody BuyingBag buyingBag, @PathVariable Long product_id, JwtAuthenticationToken token){
+	public ResponseEntity<Void> newBag(@RequestBody BuyingBag buyingBag, @PathVariable Long product_id, JwtAuthenticationToken token){
 		User user =  userServices.findById(Long.parseLong(token.getName()));
 		Product product = productServices.findById(product_id);
 		
@@ -93,32 +108,20 @@ public class BagResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> buy(@RequestBody DeleteFromBag dBag, JwtAuthenticationToken jwt) {
+	@Transactional
+	public ResponseEntity<Void> buy(@RequestBody DeleteFromBag buyBag, JwtAuthenticationToken jwt) {
 		User user = userServices.findById(Long.parseLong(jwt.getName()));
 		List<Bag> bags = userServices.getBags(user);
-		Bag bag = service.findById(dBag.id());
+		Bag bag = service.findById(buyBag.id());
 		if(bags.contains(bag)) {
+			Order order = new Order(null, Instant.now(), OrderStatus.WAITING_PAYMENT, user);
+			orderServices.save(order);
+			OrderItem oI = new OrderItem(order, bag.getProduct(), bag.getQuantity(), bag.getPrice());
+			orderItemServices.save(oI);
 			service.delete(bag);
 			return null;
 		} else {
 			throw new NotAllowedEception("Insuficient permission");
 		}
 	}
-	
-	@PostMapping
-	public ResponseEntity<Void> test(@RequestBody DeleteFromBag dBag, JwtAuthenticationToken jwt) {
-		User user = userServices.findById(Long.parseLong(jwt.getName()));
-		List<Bag> bags = userServices.getBags(user);
-		Bag bag = service.findById(dBag.id());
-		if(bags.contains(bag)) {
-			service.delete(bag);
-			return null;
-		} else {
-			throw new NotAllowedEception("Insuficient permission");
-		}
-	}
-	
-	
-	
-	
 }
