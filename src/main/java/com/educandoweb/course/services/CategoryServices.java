@@ -30,4 +30,8 @@ public class CategoryServices {
 		Optional<Category> obj = repository.findById(categoryId); //meio q faz uma objetificada
 		return obj.get().getProducts();
 	}
+	
+	public void create(Category category) {
+		repository.save(category);
+	}
 }
