@@ -1,14 +1,13 @@
 package com.educandoweb.course.resources;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.educandoweb.course.entities.Role;
 import com.educandoweb.course.entities.User;
+import com.educandoweb.course.entities.factory.UserFactory;
 import com.educandoweb.course.resources.dto.CreateUserDTO;
 import com.educandoweb.course.services.RoleService;
 import com.educandoweb.course.services.UserServices;
@@ -33,11 +32,14 @@ public class UserResource {
 	@Autowired
 	private UserServices service;
 	
-	@Autowired
-	private RoleService roleService;
+//	@Autowired
+//	private RoleService roleService;
+//	
+//	@Autowired
+//	private PasswordEncoder encoder;
 	
 	@Autowired
-	private PasswordEncoder encoder;
+	private UserFactory factory;
 	
 	@GetMapping
 	@PreAuthorize("hasAuthority('SCOPE_ADMIN')")
@@ -65,16 +67,27 @@ public class UserResource {
 	
 	@PostMapping
 	public ResponseEntity<Void> newUser(@RequestBody CreateUserDTO dto){
-		var role = roleService.findByName(Role.Values.USER.name());
+//		var role = roleService.findByName(Role.Values.USER.name());
 		var userFound = service.findByUsernameCreation(dto.username());
 		if(userFound != null) {
 			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		User user = new User(null, dto.name(), dto.email(), dto.phone(), dto.username(), encoder.encode(dto.password()));
-		user.setRoles(Set.of(role));
+		User user = factory.crateUser(null, dto.name(), dto.email(), dto.phone(), dto.username(), dto.password());
 		service.insert(user);
 		return ResponseEntity.ok().build();
 
+	}
+	
+	@PostMapping(value = "/newAdmin")
+	@PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+	public ResponseEntity<Void> newAdmin(@RequestBody CreateUserDTO dto){
+		var userFound = service.findByUsernameCreation(dto.username());
+		if(userFound != null) {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		User user = factory.crateAdmin(null, dto.name(), dto.email(), dto.phone(), dto.username(), dto.password());
+		service.insert(user);
+		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping(value = "/{id}")

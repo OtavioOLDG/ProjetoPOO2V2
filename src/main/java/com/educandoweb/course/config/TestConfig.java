@@ -20,6 +20,7 @@ import com.educandoweb.course.entities.Product;
 import com.educandoweb.course.entities.Role;
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.entities.enums.OrderStatus;
+import com.educandoweb.course.entities.factory.UserFactory;
 import com.educandoweb.course.repositories.CategoryRepository;
 import com.educandoweb.course.repositories.OrderItemRepository;
 import com.educandoweb.course.repositories.OrderRepository;
@@ -31,7 +32,7 @@ import jakarta.transaction.Transactional;
 
 @Configuration // classe específica de configuração
 @Profile("test") // escolhe o perfil test dentro da file do main/resources
-@Import(WebSecurityConfig.class)
+@Import({WebSecurityConfig.class, UserFactory.class})
 public class TestConfig implements CommandLineRunner{
 	
 	@Autowired // injeção de dependência
@@ -54,6 +55,9 @@ public class TestConfig implements CommandLineRunner{
 	
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private UserFactory userFactory;
 
 	@Override
 	@Transactional
@@ -89,7 +93,7 @@ public class TestConfig implements CommandLineRunner{
 		//var roleAdmin = roleRepository.findById(1L);
 		
 		var roleAdmin2 = roleRepository.findByName(Role.Values.ADMIN.name());
-		var roleUser = roleRepository.findByName(Role.Values.USER.name());
+		//var roleUser = roleRepository.findByName(Role.Values.USER.name());
 		var userAdmin = userRepository.findByUsername("bobB");
 		
 		userAdmin.ifPresentOrElse(
@@ -108,12 +112,13 @@ public class TestConfig implements CommandLineRunner{
 				}
 		);
 		
+		User u1 = userFactory.crateAdmin(null, "Maria Brown", "maria@gmail.com", "988888888", "mariaB", "test");
+		User u2 = userFactory.crateUser(null, "Alex Green", "alex@gmail.com", "977777777", "alexG", "test");
 		
-		
-		User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "mariaB", encoder.encode("test"));
-		User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "alexG" , encoder.encode("test")); 
-		u1.setRolesOptional(Set.of(roleUser));
-		u2.setRolesOptional(Set.of(roleUser));
+//		User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "mariaB", encoder.encode("test"));
+//		User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "alexG" , encoder.encode("test")); 
+//		u1.setRolesOptional(Set.of(roleUser));
+//		u2.setRolesOptional(Set.of(roleUser));
 		
 		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, u1);
 		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.DELIVERED, u2);

@@ -1,5 +1,7 @@
 package com.educandoweb.course.resources.dto;
 
-public record LoginResponse(String accessToken, Long expiressIn) {
+import com.educandoweb.course.entities.User;
+
+public record LoginResponse(String accessToken, Long expiressIn, User user) {
 
 }
