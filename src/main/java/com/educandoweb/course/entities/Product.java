@@ -28,7 +28,7 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String desciption;
+	private String description;
 	private Double price;
 	private String imgUrl;
 	
@@ -50,10 +50,10 @@ public class Product implements Serializable {
 	public Product() {
 	}
 	
-	public Product(Long id, String name, String desciption, Double price, String imgUrl) {
+	public Product(Long id, String name, String description, Double price, String imgUrl) {
 		this.id = id;
 		this.name = name;
-		this.desciption = desciption;
+		this.description = description;
 		this.price = price;
 		this.imgUrl = imgUrl;
 	}
@@ -75,11 +75,11 @@ public class Product implements Serializable {
 	}
 
 	public String getDesciption() {
-		return desciption;
+		return description;
 	}
 
 	public void setDesciption(String desciption) {
-		this.desciption = desciption;
+		this.description = desciption;
 	}
 
 	public Double getPrice() {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,5 +38,11 @@ public class ProductResource {
 	public ResponseEntity<List<Product>> findProductsByString(@RequestBody ProductString st) { // para o spring aceitar a variável q será colocada na url
 		List<Product> prod = service.findByString(st.st());
 		return ResponseEntity.ok().body(prod);
+	}
+	
+	@PostMapping// passa na url o valor do id do usuário e adiciona um parâmetro
+	public ResponseEntity<Void> create(@RequestBody Product product) { // para o spring aceitar a variável q será colocada na url
+		service.save(product);
+		return null;
 	}
 }

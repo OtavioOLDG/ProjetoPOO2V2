@@ -72,7 +72,7 @@ public class UserResource {
 		if(userFound != null) {
 			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		User user = factory.crateUser(null, dto.name(), dto.email(), dto.phone(), dto.username(), dto.password());
+		User user = factory.crateUser(null, dto.name(), dto.email(), dto.phone(), dto.username(), dto.password(), dto.img());
 		service.insert(user);
 		return ResponseEntity.ok().build();
 
@@ -85,7 +85,7 @@ public class UserResource {
 		if(userFound != null) {
 			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		User user = factory.crateAdmin(null, dto.name(), dto.email(), dto.phone(), dto.username(), dto.password());
+		User user = factory.crateAdmin(null, dto.name(), dto.email(), dto.phone(), dto.username(), dto.password(), dto.img());
 		service.insert(user);
 		return ResponseEntity.ok().build();
 	}

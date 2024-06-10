@@ -43,6 +43,7 @@ public class User implements Serializable, UserDetails {
 	private String email;
 	private String phone;
 	private String username;
+	private String imgUrl;
 	
 	@JsonIgnore
 	private String password;
@@ -211,8 +212,25 @@ public class User implements Serializable, UserDetails {
 	public void setBags(List<Bag> bags) {
 		this.bags = bags;
 	}
-	
-	
+
+	public User(Long id, String name, String email, String phone, String username, String imgUrl, String password) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
+		this.username = username;
+		this.imgUrl = imgUrl;
+		this.password = password;
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
 
 	
 }

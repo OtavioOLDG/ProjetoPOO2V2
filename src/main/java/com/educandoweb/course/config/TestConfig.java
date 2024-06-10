@@ -63,7 +63,7 @@ public class TestConfig implements CommandLineRunner{
 	@Transactional
 	public void run(String... args) throws Exception {
 		
-		Category cat1 = new Category(null, "Electronics", null);
+		Category cat1 = new Category(null, "Electronics", "");
 		Category cat2 = new Category(null, "Books", null);
 		Category cat3 = new Category(null, "Computers", null); 
 		
@@ -112,8 +112,8 @@ public class TestConfig implements CommandLineRunner{
 				}
 		);
 		
-		User u1 = userFactory.crateAdmin(null, "Maria Brown", "maria@gmail.com", "988888888", "mariaB", "test");
-		User u2 = userFactory.crateUser(null, "Alex Green", "alex@gmail.com", "977777777", "alexG", "test");
+		User u1 = userFactory.crateAdmin(null, "Maria Brown", "maria@gmail.com", "988888888", "mariaB", "test", "img");
+		User u2 = userFactory.crateUser(null, "Alex Green", "alex@gmail.com", "977777777", "alexG", "test", "img");
 		
 //		User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "mariaB", encoder.encode("test"));
 //		User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "alexG" , encoder.encode("test")); 

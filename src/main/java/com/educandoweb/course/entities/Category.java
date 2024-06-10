@@ -23,7 +23,7 @@ public class Category implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String imgUrl;
+	private String image;
 	
 	@JsonIgnore
 	@ManyToMany(mappedBy = "categories")
@@ -34,10 +34,9 @@ public class Category implements Serializable{
 	}
 	
 	public Category(Long id, String name, String imgUrl) {
-		super();
 		this.id = id;
 		this.name = name;
-		this.imgUrl = imgUrl;
+		this.image = imgUrl;
 	}
 
 	public Long getId() {
@@ -57,10 +56,10 @@ public class Category implements Serializable{
 	}
 
 	public String getImgUrl() {
-		return imgUrl;
+		return image;
 	}
 	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
+		this.image = imgUrl;
 	}
 	@Override
 	public int hashCode() {

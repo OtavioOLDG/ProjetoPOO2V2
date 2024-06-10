@@ -23,9 +23,23 @@ public class UserFactory {
 		user.setRolesOptional(Set.of(admin));
 		return user;
 	}
+	
+	public User crateAdmin(Long id, String name, String email, String phone, String username, String password, String img) {
+		User user = new User(id, name, email, phone, username, img, encoder.encode(password));
+		var admin = repository.findByName(Role.Values.ADMIN.name());
+		user.setRolesOptional(Set.of(admin));
+		return user;
+	}
 
 	public User crateUser(Long id, String name, String email, String phone, String username, String password) {
 		User user = new User(id, name, email, phone, username, encoder.encode(password));
+		var userRole = repository.findByName(Role.Values.USER.name());
+		user.setRolesOptional(Set.of(userRole));
+		return user;
+	}
+	
+	public User crateUser(Long id, String name, String email, String phone, String username, String password, String img) {
+		User user = new User(id, name, email, phone, username, img, encoder.encode(password));
 		var userRole = repository.findByName(Role.Values.USER.name());
 		user.setRolesOptional(Set.of(userRole));
 		return user;

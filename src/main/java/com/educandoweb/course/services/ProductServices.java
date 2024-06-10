@@ -21,6 +21,11 @@ public class ProductServices {
 		return repository.findAll();
 	}
 	
+	public void save(Product product){
+		repository.save(product);
+	}
+	
+	
 	public Product findById(Long id) {
 		Optional<Product> obj = repository.findById(id); //meio q faz uma objetificada
 		return obj.get();

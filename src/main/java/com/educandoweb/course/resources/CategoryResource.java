@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.educandoweb.course.entities.Category;
 import com.educandoweb.course.entities.Product;
+import com.educandoweb.course.resources.dto.CreateCatDTO;
+import com.educandoweb.course.resources.dto.EditCategory;
 import com.educandoweb.course.services.CategoryServices;
 
 @RestController
@@ -45,7 +47,17 @@ public class CategoryResource {
 	
 	@PostMapping
 	@PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-	public ResponseEntity<Void> create(@RequestBody Category category){
+	public ResponseEntity<Void> create(@RequestBody CreateCatDTO cat){
+		Category category = new Category(null, cat.name(), cat.image());
+		service.create(category);
+		return null;
+	}
+	
+	@PostMapping(value = "/img")
+	@PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+	public ResponseEntity<Void> changeImg(@RequestBody EditCategory cat){
+		Category category = service.findById(cat.id());
+		category.setImgUrl(cat.imgUrl());
 		service.create(category);
 		return null;
 	}
